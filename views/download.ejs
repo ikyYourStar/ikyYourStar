@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #6dd5ed, #2193b0);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: #333;
+        overflow-x: hidden;
+        position: relative;
+        box-sizing: border-box;
+      }
+      .main-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-x: hidden;
+        box-sizing: border-box;
+        padding: 20px;
+        margin: 0 auto;
+        border-radius: 0;
+        position: relative;
+      }
+      @media (min-width: 768px) {
+        .main-wrapper {
+          max-width: 500px;
+          min-height: auto;
+          border-radius: 12px;
+          padding: 30px;
+          margin-top: 50px;
+          margin-bottom: 50px;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+      }
+      .header {
+        margin-bottom: 25px;
+        text-align: center;
+      }
+      .header img {
+        width: 250px;
+        margin-bottom: 15px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .content {
+        text-align: left;
+      }
+      .content h2 {
+        color: #2193b0;
+        font-size: 1.5em;
+        text-align: center;
+      }
+      .video-info {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f0f8ff;
+        border: 1px solid #e0f7fa;
+        text-align: left;
+      }
+      .video-info p {
+        margin: 5px 0;
+      }
+      .preview-container {
+        margin: 15px auto;
+        text-align: center;
+      }
+      .preview-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      .download-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+        text-align: left;
+      }
+      .download-list li {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        padding: 10px;
+        border-radius: 6px;
+      }
+      .download-list li a {
+        background-color: #ff0050;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+      .download-list li a:hover {
+        background-color: #e60047;
+      }
+      .stats-section {
+        margin-top: 20px;
+        text-align: center;
+        color: #555;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        padding: 10px 0;
+      }
+      .stats-section span {
+        margin: 5px 8px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+      }
+      .stats-section span i {
+        color: #ff0050;
+        margin-right: 5px;
+      }
+      .back-link {
+        display: block;
+        margin-top: 30px;
+        text-align: center;
+        color: #2193b0;
+        font-weight: bold;
+        text-decoration: none;
+      }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="header">
+            <img src="<%= logo %>" alt="ZEDXYT Logo" />
+        </div>
+        <div class="content">
+            <h2>Hasil Download TikTok</h2>
+            <div class="video-info">
+              <p><b>Judul:</b> <%= result.title %></p>
+              <p><b>Author:</b> <%= result.author.nickname %> (<%= result.author.fullname %>)</p>
+            </div>
+            
+            <div class="preview-container">
+              <img src="<%= result.cover %>" alt="Video Preview">
+            </div>
+
+            <div class="stats-section">
+                <span><i class="fas fa-eye"></i> <%= result.stats.views %></span>
+                <span><i class="fas fa-heart"></i> <%= result.stats.likes %></span>
+                <span><i class="fas fa-comment"></i> <%= result.stats.comment %></span>
+                <span><i class="fas fa-share"></i> <%= result.stats.share %></span>
+            </div>
+
+            <ul class="download-list">
+              <% result.data.forEach((vid) => { %>
+                <li>
+                  <span><%= vid.type %></span>
+                  <a href="<%= vid.url %>" target="_blank" download>Download</a>
+                </li>
+              <% }); %>
+            </ul>
+            
+            <a href="/" class="back-link">Kembali ke Halaman Utama</a>
+        </div>
+    </div>
+</body>
+</html>
