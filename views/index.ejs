@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to right, #6dd5ed, #2193b0);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        color: #333;
+        overflow-x: hidden;
+        position: relative;
+        box-sizing: border-box;
+      }
+      .main-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow-x: hidden;
+        box-sizing: border-box;
+        padding: 20px;
+        margin: 0 auto;
+        border-radius: 0;
+        position: relative;
+      }
+      @media (min-width: 768px) {
+        .main-wrapper {
+          max-width: 500px;
+          min-height: auto;
+          border-radius: 12px;
+          padding: 30px;
+          margin-top: 50px;
+          margin-bottom: 50px;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 250px;
+        height: 100%;
+        background-color: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+        border-left: 1px solid #eee;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      }
+      body.sidebar-open .sidebar {
+        transform: translateX(0);
+      }
+      .sidebar h2 {
+        color: #2193b0;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .sidebar .sidebar-buttons {
+        width: 100%;
+      }
+      .sidebar .sidebar-buttons button {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        background-color: #e0f7fa;
+        color: #2193b0;
+        border: 1px solid #a0d9e9;
+        border-radius: 6px;
+        text-align: left;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      .sidebar .sidebar-buttons button:hover {
+        background-color: #2193b0;
+        color: white;
+      }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      body.sidebar-open .overlay {
+        opacity: 1;
+        visibility: visible;
+      }
+      .header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+      }
+      .header img {
+        width: 250px;
+        margin-bottom: 15px;
+        display: block;
+      }
+      .header h1 {
+        color: #2193b0;
+        font-size: 1.8em;
+        margin-top: 0;
+        font-weight: bold;
+      }
+      .header .title-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+      }
+      .header .title-container h1 {
+        margin: 0;
+        font-size: 1.8em;
+        color: #2193b0;
+      }
+      .header .title-container i {
+        font-size: 1.5em;
+        color: #ff0050;
+        margin-right: 10px;
+      }
+      .hamburger-button {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 1.2em;
+        color: #2193b0;
+        cursor: pointer;
+        z-index: 1001; /* Naikkan z-index agar bisa diklik */
+        padding: 5px;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+      body.sidebar-open .hamburger-button {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .hamburger-button:hover {
+        color: #1a7b93;
+      }
+      .input-section {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .input-section input[type="text"] {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #a0d9e9;
+        border-radius: 6px 0 0 6px;
+        font-size: 0.95em;
+        outline: none;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .input-section button {
+        padding: 10px 20px;
+        background-color: #ff0050;
+        color: white;
+        border: none;
+        border-radius: 0 6px 6px 0;
+        cursor: pointer;
+        font-size: 0.95em;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .input-section button:hover {
+        background-color: #e60047;
+        transform: translateY(-1px);
+      }
+      .error-message {
+        color: #d9534f;
+        margin-top: 10px;
+        font-weight: bold;
+        text-align: center;
+      }
+      footer {
+        margin-top: 40px;
+        color: #777;
+        font-size: 0.85em;
+        text-align: center;
+      }
+      a {
+        color: #2193b0;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .description {
+        text-align: center;
+        margin-top: -15px;
+        margin-bottom: 25px;
+      }
+      .info-section {
+        text-align: left;
+        color: #555;
+        line-height: 1.7;
+        margin-top: 30px;
+        font-size: 0.9em;
+      }
+      .info-section h2 {
+        color: #2193b0;
+        font-size: 1.2em;
+        margin-bottom: 12px;
+      }
+      .info-section ul {
+        list-style: none;
+        padding-left: 0;
+      }
+      .info-section ul li {
+        margin-bottom: 8px;
+        position: relative;
+        padding-left: 25px;
+      }
+      .info-section ul li::before {
+        content: '✓';
+        color: #2193b0;
+        position: absolute;
+        left: 0;
+        font-weight: bold;
+      }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+
+    <div class="sidebar" id="sidebar">
+      <h2>Menu</h2>
+      <div class="sidebar-buttons">
+        <button onclick="window.location.href='https://zedxfb.vercel.app';">
+          <i class="fas fa-link"></i> ZedxFB
+        </button>
+        <button onclick="window.location.href='https://zedxyt.vercel.app';">
+          <i class="fas fa-link"></i> ZedxFB
+        </button>
+        <button onclick="window.location.href='https://zedxai.netlify.app';">
+          <i class="fas fa-link"></i> ZedxAI
+        </button>
+        <button onclick="window.location.href='https://zedxtik.vercel.app';">
+          <i class="fas fa-link"></i> ZedxTIK
+        </button>
+        <button onclick="window.location.href='example.com/link5';">
+          <i class="fas fa-link"></i> Example 5
+        </button>
+      </div>
+    </div>
+
+    <div class="main-wrapper" id="mainWrapper">
+      <div class="header">
+        <button class="hamburger-button" id="hamburgerButton">
+          <i class="fas fa-bars"></i>
+        </button>
+        <img src="<%= logo %>" alt="ZEDXYT Logo" />
+        <div class="title-container">
+          <i class="fab fa-tiktok"></i>
+          <h1>TikTok Video Downloader</h1>
+        </div>
+      </div>
+
+      <p class="description">Unduh video TikTok tanpa watermark dengan mudah dan cepat.</p>
+
+      <form class="input-section" method="POST" action="/download">
+        <input type="text" name="url" placeholder="Tempel link TikTok..." required />
+        <button type="submit">Download</button>
+      </form>
+      
+      <% if (error) { %>
+        <p class="error-message">
+          <% if (error === 'no_url') { %>
+            ❌ Harap masukkan URL TikTok!
+          <% } else if (error === 'failed_download') { %>
+            ❌ Gagal mengambil video TikTok. Pastikan URL valid!
+          <% } %>
+        </p>
+      <% } %>
+
+      <div class="info-section">
+        <h2>Bagaimana Cara Mengunduh Video TikTok?</h2>
+        <p>Layanan kami memungkinkan Anda mengunduh video dari TikTok secara mudah dan cepat. Proses download video kami dirancang untuk memberikan kualitas terbaik, termasuk video tanpa watermark. Anda tidak memerlukan aplikasi tambahan atau pendaftaran.</p>
+        <p>Kami mendukung berbagai jenis video TikTok, namun perlu diingat bahwa video yang bersifat pribadi atau dibatasi mungkin tidak dapat diunduh.</p>
+        <p>Berikut langkah-langkah mudahnya:</p>
+        <ul>
+            <li>Buka aplikasi TikTok atau situs web di browser Anda.</li>
+            <li>Temukan video yang ingin Anda unduh dan salin tautannya (URL).</li>
+            <li>Tempel URL video ke kolom di atas dan klik tombol "Download".</li>
+            <li>Pilih kualitas yang diinginkan dan klik tautan unduh.</li>
+            <li>Nikmati video TikTok Anda secara offline kapan saja! Layanan ini gratis dan mudah digunakan.</li>
+        </ul>
+      </div>
+
+      <footer>© 2025 ZEDXYT. All rights reserved.</footer>
+    </div>
+
+    <script>
+      const body = document.body;
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const hamburgerButton = document.getElementById("hamburgerButton");
+
+      function openSidebar() {
+        body.classList.add("sidebar-open");
+        hamburgerButton.style.opacity = '0';
+        hamburgerButton.style.visibility = 'hidden';
+        hamburgerButton.style.pointerEvents = 'none';
+      }
+
+      function closeSidebar() {
+        body.classList.remove("sidebar-open");
+        hamburgerButton.style.opacity = '1';
+        hamburgerButton.style.visibility = 'visible';
+        hamburgerButton.style.pointerEvents = 'auto';
+      }
+
+      hamburgerButton.addEventListener("click", openSidebar);
+      overlay.addEventListener("click", closeSidebar);
+    </script>
+</body>
+</html>
